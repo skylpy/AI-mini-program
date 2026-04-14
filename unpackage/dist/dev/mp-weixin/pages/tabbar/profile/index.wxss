@@ -1,0 +1,78 @@
+.profile-page.data-v-4cb51321 {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.profile-header.data-v-4cb51321 {
+  padding: 0 24rpx 40rpx;
+  background: linear-gradient(180deg, #ff7872 0%, #ff5a5f 100%);
+  border-bottom-left-radius: 36rpx;
+  border-bottom-right-radius: 36rpx;
+}
+.header-top.data-v-4cb51321 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24rpx;
+}
+.header-title.data-v-4cb51321 {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+.capsule-btn.data-v-4cb51321 {
+  padding: 18rpx 26rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  font-size: 24rpx;
+}
+.user-card.data-v-4cb51321 {
+  display: flex;
+  align-items: center;
+  margin-top: 52rpx;
+}
+.avatar-wrap.data-v-4cb51321 {
+  width: 120rpx;
+  height: 120rpx;
+}
+.avatar.data-v-4cb51321,
+.avatar-placeholder.data-v-4cb51321 {
+  width: 100%;
+  height: 100%;
+  border-radius: 999rpx;
+}
+.avatar-placeholder.data-v-4cb51321 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.25);
+  border: 4rpx solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  font-size: 42rpx;
+  font-weight: 700;
+}
+.user-content.data-v-4cb51321 {
+  margin-left: 24rpx;
+}
+.username.data-v-4cb51321 {
+  display: block;
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+.user-id.data-v-4cb51321 {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.88);
+}
+.content-area.data-v-4cb51321 {
+  margin-top: -20rpx;
+  padding: 0 24rpx 120rpx;
+}
+.menu-card.data-v-4cb51321 {
+  padding: 0 22rpx;
+  background: #ffffff;
+  border-radius: 28rpx;
+  box-shadow: 0 12rpx 32rpx rgba(15, 23, 42, 0.06);
+}

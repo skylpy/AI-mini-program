@@ -1,0 +1,19 @@
+{
+  "name": "文档格式转换工具",
+  "appid": "__UNI__DOC_CONVERTER__",
+  "description": "文档格式转换工具微信小程序前端示例项目",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true
+  },
+  "mp-weixin": {
+    "appid": "wx1234567890abcdef",
+    "setting": {
+      "urlCheck": false
+    },
+    "usingComponents": true
+  },
+  "vueVersion": "3"
+}

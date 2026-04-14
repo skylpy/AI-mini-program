@@ -1,0 +1,39 @@
+.tool-card.data-v-59f88834 {
+  display: flex;
+  align-items: center;
+  padding: 26rpx 22rpx;
+  min-height: 180rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 10rpx 24rpx rgba(15, 23, 42, 0.05);
+}
+.icon-wrap.data-v-59f88834 {
+  flex-shrink: 0;
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-text.data-v-59f88834 {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #2563eb;
+}
+.content.data-v-59f88834 {
+  margin-left: 18rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.title.data-v-59f88834 {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #111827;
+}
+.subtitle.data-v-59f88834 {
+  font-size: 24rpx;
+  color: #6b7280;
+  line-height: 1.5;
+}

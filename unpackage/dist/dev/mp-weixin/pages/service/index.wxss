@@ -1,0 +1,21 @@
+.service-card.data-v-f6ccea2d {
+  padding: 32rpx 28rpx;
+}
+.service-title.data-v-f6ccea2d {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #111827;
+}
+.service-desc.data-v-f6ccea2d {
+  display: block;
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  color: #6b7280;
+}
+.mt-24.data-v-f6ccea2d {
+  margin-top: 24rpx;
+}
+.mt-36.data-v-f6ccea2d {
+  margin-top: 36rpx;
+}

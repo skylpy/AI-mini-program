@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "banner-card": "../../../components/BannerCard",
+    "section-title": "../../../components/SectionTitle",
+    "tool-card": "../../../components/ToolCard"
+  }
+}

@@ -1,0 +1,28 @@
+.template-card.data-v-818172cc {
+  padding: 30rpx 24rpx;
+}
+.template-tag.data-v-818172cc {
+  display: inline-flex;
+  padding: 10rpx 18rpx;
+  border-radius: 999rpx;
+  background: #edf5ff;
+  color: #2563eb;
+  font-size: 22rpx;
+}
+.template-title.data-v-818172cc {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #111827;
+}
+.template-desc.data-v-818172cc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #6b7280;
+  line-height: 1.7;
+}
+.preview-btn.data-v-818172cc {
+  margin-top: 28rpx;
+}

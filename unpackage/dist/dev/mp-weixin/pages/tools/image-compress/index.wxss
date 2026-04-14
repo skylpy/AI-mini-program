@@ -1,0 +1,34 @@
+.placeholder-card.data-v-2c6a0bf7 {
+  padding: 40rpx 28rpx;
+  text-align: center;
+}
+.placeholder-icon.data-v-2c6a0bf7 {
+  width: 120rpx;
+  height: 120rpx;
+  margin: 0 auto;
+  border-radius: 30rpx;
+  background: #fff7ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ea580c;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+.placeholder-title.data-v-2c6a0bf7 {
+  display: block;
+  margin-top: 28rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #111827;
+}
+.placeholder-desc.data-v-2c6a0bf7 {
+  display: block;
+  margin-top: 14rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #6b7280;
+}
+.mt-36.data-v-2c6a0bf7 {
+  margin-top: 36rpx;
+}

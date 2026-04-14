@@ -1,0 +1,27 @@
+.faq-card.data-v-e1a022cb {
+  padding: 28rpx 24rpx;
+}
+.faq-head.data-v-e1a022cb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.faq-question.data-v-e1a022cb {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.6;
+}
+.faq-arrow.data-v-e1a022cb {
+  margin-left: 18rpx;
+  color: #9ca3af;
+  font-size: 34rpx;
+}
+.faq-answer.data-v-e1a022cb {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 26rpx;
+  color: #6b7280;
+  line-height: 1.8;
+}

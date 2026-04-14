@@ -1,0 +1,26 @@
+.section-title.data-v-b5423538 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+.title-left.data-v-b5423538 {
+  display: flex;
+  align-items: center;
+}
+.bar.data-v-b5423538 {
+  width: 10rpx;
+  height: 30rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(180deg, #5aa5ff, #7bd1ff);
+}
+.title-text.data-v-b5423538 {
+  margin-left: 14rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #111827;
+}
+.title-desc.data-v-b5423538 {
+  font-size: 24rpx;
+  color: #9ca3af;
+}
