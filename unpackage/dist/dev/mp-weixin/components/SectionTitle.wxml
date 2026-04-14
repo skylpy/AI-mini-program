@@ -1,1 +1,0 @@
-<view class="section-title data-v-b5423538"><view class="title-left data-v-b5423538"><view class="bar data-v-b5423538"></view><text class="title-text data-v-b5423538">{{a}}</text></view><text wx:if="{{b}}" class="title-desc data-v-b5423538">{{c}}</text></view>

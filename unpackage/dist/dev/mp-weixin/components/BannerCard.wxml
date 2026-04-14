@@ -1,1 +1,0 @@
-<view class="banner-card data-v-efa61ef8" bindtap="{{d}}"><image wx:if="{{a}}" class="banner-image data-v-efa61ef8" src="{{b}}" mode="aspectFill"/><view class="banner-mask data-v-efa61ef8"></view><view class="banner-content data-v-efa61ef8"><text class="banner-title data-v-efa61ef8">{{c}}</text><text class="banner-tip data-v-efa61ef8">高效处理文档格式转换需求</text></view></view>

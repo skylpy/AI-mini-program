@@ -1,6 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "list-cell": "../../../components/ListCell"
-  }
-}

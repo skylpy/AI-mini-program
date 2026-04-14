@@ -1,1 +1,0 @@
-{"version":3,"file":"BannerCard.js","sources":["/Users/a/node_service/AI-mini-program/components/BannerCard.vue?type=component"],"sourcesContent":["import Component from '/Users/a/node_service/AI-mini-program/components/BannerCard.vue'\nwx.createComponent(Component)"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;AACA,GAAG,gBAAgB,SAAS;"}

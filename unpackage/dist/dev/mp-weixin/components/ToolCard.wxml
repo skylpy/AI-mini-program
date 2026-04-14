@@ -1,1 +1,0 @@
-<view class="tool-card data-v-59f88834" bindtap="{{e}}"><view class="icon-wrap data-v-59f88834" style="{{'background:' + b}}"><text class="icon-text data-v-59f88834">{{a}}</text></view><view class="content data-v-59f88834"><text class="title data-v-59f88834">{{c}}</text><text class="subtitle data-v-59f88834">{{d}}</text></view></view>
