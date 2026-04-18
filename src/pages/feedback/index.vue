@@ -62,7 +62,8 @@ function handleSubmit() {
   height: 260rpx;
   margin-top: 18rpx;
   padding: 24rpx;
-  background: #f8fafc;
+  background: #f5f8ff;
+  border: 2rpx solid rgba(228, 236, 250, 0.95);
   border-radius: 24rpx;
   font-size: 28rpx;
 }
@@ -72,7 +73,8 @@ function handleSubmit() {
   height: 92rpx;
   margin-top: 18rpx;
   padding: 0 24rpx;
-  background: #f8fafc;
+  background: #f5f8ff;
+  border: 2rpx solid rgba(228, 236, 250, 0.95);
   border-radius: 22rpx;
   font-size: 28rpx;
 }

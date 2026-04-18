@@ -1,6 +1,6 @@
 import { useUserStore } from '../stores/user'
 
-const WHITE_LIST = ['/pages/login/index', '/pages/register/index']
+const WHITE_LIST = ['/pages/login/index', '/pages/register/index', '/pages/forgot-password/index']
 let initialized = false
 
 function normalizeUrl(url = '') {

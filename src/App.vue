@@ -12,7 +12,7 @@ onLaunch(() => {
 
 <style lang="scss">
 page {
-  background: #f5f5f5;
+  background: #f4f7fc;
   color: #1f2937;
   font-size: 28rpx;
 }
@@ -20,8 +20,14 @@ page {
 .page-container {
   min-height: 100vh;
   padding: calc(var(--status-bar-height) + 24rpx) 24rpx 32rpx;
-  background: #f5f5f5;
+  background: linear-gradient(180deg, #edf4ff 0, #f4f7fc 240rpx, #f4f7fc 100%);
 }
+
+/* #ifdef MP-WEIXIN */
+.page-container {
+  padding-top: calc(var(--status-bar-height) + 24rpx + 8px);
+}
+/* #endif */
 
 .page-with-tabbar {
   padding-bottom: 120rpx;
@@ -29,6 +35,11 @@ page {
 
 .page-head {
   margin-bottom: 8rpx;
+  padding: 26rpx 24rpx;
+  background: #ffffff;
+  border: 2rpx solid rgba(228, 236, 250, 0.9);
+  border-radius: 28rpx;
+  box-shadow: 0 12rpx 28rpx rgba(31, 50, 92, 0.06);
 }
 
 .status-bar {
@@ -37,8 +48,9 @@ page {
 
 .card-block {
   background: #ffffff;
+  border: 2rpx solid rgba(228, 236, 250, 0.92);
   border-radius: 28rpx;
-  box-shadow: 0 8rpx 24rpx rgba(15, 23, 42, 0.05);
+  box-shadow: 0 12rpx 28rpx rgba(31, 50, 92, 0.06);
 }
 
 .section-gap {
@@ -49,7 +61,7 @@ page {
   width: 100%;
   height: 92rpx;
   border-radius: 999rpx;
-  background: linear-gradient(135deg, #ff7c74, #ff5a5f);
+  background: linear-gradient(135deg, #3b75ff, #2d67f6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,26 +74,26 @@ page {
   width: 100%;
   height: 92rpx;
   border-radius: 999rpx;
-  border: 2rpx solid rgba(255, 90, 95, 0.18);
-  background: #fff;
+  border: 2rpx solid rgba(45, 103, 246, 0.15);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ff5a5f;
+  color: #2d67f6;
   font-size: 30rpx;
   font-weight: 600;
 }
 
 .page-title {
-  font-size: 40rpx;
+  font-size: 38rpx;
   font-weight: 700;
-  color: #111827;
+  color: #0f172a;
 }
 
 .page-subtitle {
   margin-top: 12rpx;
   font-size: 24rpx;
-  color: #6b7280;
+  color: #8a97ad;
   line-height: 1.6;
 }
 

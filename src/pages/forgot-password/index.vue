@@ -1,10 +1,10 @@
 <template>
-  <view class="register-page">
+  <view class="reset-page">
     <view class="hero">
       <view class="status-bar"></view>
-      <PageNav title="注册" />
-      <text class="hero-title">创建账号</text>
-      <text class="hero-subtitle">完成注册后即可登录并使用文档转换相关功能</text>
+      <PageNav title="忘记密码" />
+      <text class="hero-title">重置密码</text>
+      <text class="hero-subtitle">请填写注册时的用户信息，并设置一个新的登录密码</text>
     </view>
 
     <view class="form-card">
@@ -19,58 +19,58 @@
           v-model.trim="form.mobile"
           type="number"
           maxlength="11"
-          placeholder="请输入手机号"
+          placeholder="请输入注册手机号"
         />
       </view>
 
       <view class="field-wrap">
-        <text class="field-label">邮箱（选填）</text>
-        <FormInput v-model.trim="form.email" placeholder="请输入邮箱地址" />
+        <text class="field-label">邮箱</text>
+        <FormInput v-model.trim="form.email" placeholder="请输入注册邮箱" />
       </view>
 
       <view class="field-wrap">
-        <text class="field-label">密码</text>
+        <text class="field-label">新密码</text>
         <FormInput
-          v-model.trim="form.password"
-          placeholder="请输入密码，不少于 6 位"
+          v-model.trim="form.newPassword"
+          placeholder="请输入新密码，不少于 6 位"
           :password-toggle="true"
         />
       </view>
 
       <view class="field-wrap">
-        <text class="field-label">确认密码</text>
+        <text class="field-label">确认新密码</text>
         <FormInput
           v-model.trim="form.confirmPassword"
-          placeholder="请再次输入密码"
+          placeholder="请再次输入新密码"
           :password-toggle="true"
         />
       </view>
 
-      <button class="primary-btn" @click="handleRegister">注册</button>
-      <button class="secondary-btn mt-20" @click="goLogin">已有账号，去登录</button>
+      <button class="primary-btn" :disabled="submitting" @click="handleSubmit">
+        {{ submitting ? '提交中...' : '确认重置' }}
+      </button>
+      <button class="secondary-btn mt-20" @click="goLogin">返回登录</button>
     </view>
   </view>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import FormInput from '../../components/FormInput.vue'
-import { register } from '../../api/auth'
 import PageNav from '../../components/PageNav.vue'
+import { forgotPassword } from '../../api/auth'
 
 const form = reactive({
   username: '',
   mobile: '',
   email: '',
-  password: '',
+  newPassword: '',
   confirmPassword: ''
 })
 
-function validateEmail(email) {
-  if (!email) {
-    return true
-  }
+const submitting = ref(false)
 
+function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
@@ -85,41 +85,42 @@ function validateForm() {
     return false
   }
 
-  if (!validateEmail(form.email)) {
-    uni.showToast({ title: '邮箱格式不正确', icon: 'none' })
+  if (!form.email || !validateEmail(form.email)) {
+    uni.showToast({ title: '请输入正确的邮箱', icon: 'none' })
     return false
   }
 
-  if (!form.password || form.password.length < 6) {
-    uni.showToast({ title: '密码不少于 6 位', icon: 'none' })
+  if (!form.newPassword || form.newPassword.length < 6) {
+    uni.showToast({ title: '新密码不少于 6 位', icon: 'none' })
     return false
   }
 
-  if (form.password !== form.confirmPassword) {
-    uni.showToast({ title: '两次输入密码不一致', icon: 'none' })
+  if (form.newPassword !== form.confirmPassword) {
+    uni.showToast({ title: '两次输入的新密码不一致', icon: 'none' })
     return false
   }
 
   return true
 }
 
-async function handleRegister() {
-  if (!validateForm()) {
+async function handleSubmit() {
+  if (submitting.value || !validateForm()) {
     return
   }
 
-  uni.showLoading({ title: '注册中' })
+  submitting.value = true
+  uni.showLoading({ title: '提交中' })
 
   try {
-    const res = await register({
+    const res = await forgotPassword({
       username: form.username,
       mobile: form.mobile,
       email: form.email,
-      password: form.password
+      newPassword: form.newPassword
     })
 
     uni.showToast({
-      title: res.message || '注册成功',
+      title: res?.message || '密码重置成功',
       icon: 'none'
     })
 
@@ -127,8 +128,9 @@ async function handleRegister() {
       goLogin()
     }, 300)
   } catch (error) {
-    console.error('register error', error)
+    console.error('forgot password error', error)
   } finally {
+    submitting.value = false
     uni.hideLoading()
   }
 }
@@ -141,7 +143,7 @@ function goLogin() {
 </script>
 
 <style scoped lang="scss">
-.register-page {
+.reset-page {
   min-height: 100vh;
   padding-bottom: 32rpx;
   background: #f4f7fc;
@@ -191,15 +193,19 @@ function goLogin() {
   color: #374151;
 }
 
+.primary-btn[disabled] {
+  opacity: 0.7;
+}
+
+.mt-20 {
+  margin-top: 20rpx;
+}
+
 :deep(.page-nav) {
   margin-bottom: 18rpx;
 }
 
 :deep(.page-nav .nav-title) {
   color: #ffffff;
-}
-
-.mt-20 {
-  margin-top: 20rpx;
 }
 </style>

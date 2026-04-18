@@ -14,12 +14,16 @@
 
       <view class="field-wrap">
         <text class="field-label">手机号 / 用户名</text>
-        <input v-model.trim="form.account" class="field-input" placeholder="请输入手机号或用户名" />
+        <FormInput v-model.trim="form.account" placeholder="请输入手机号或用户名" />
       </view>
 
       <view class="field-wrap">
         <text class="field-label">密码</text>
-        <input v-model.trim="form.password" class="field-input" password placeholder="请输入密码" />
+        <FormInput v-model.trim="form.password" placeholder="请输入密码" :password-toggle="true" />
+      </view>
+
+      <view class="action-row">
+        <button class="text-btn" @click="goForgotPassword">忘记密码？</button>
       </view>
 
       <button class="primary-btn" @click="handleLogin">登录</button>
@@ -31,6 +35,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import FormInput from '../../components/FormInput.vue'
 import { login } from '../../api/auth'
 import { goHome } from '../../utils/guard'
 import { useUserStore } from '../../stores/user'
@@ -88,6 +93,12 @@ function goRegister() {
   })
 }
 
+function goForgotPassword() {
+  uni.navigateTo({
+    url: '/pages/forgot-password/index'
+  })
+}
+
 onLoad(() => {
   if (userStore.isLoggedIn()) {
     goHome()
@@ -98,35 +109,44 @@ onLoad(() => {
 <style scoped lang="scss">
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #fff4f0 0%, #f5f5f5 38%);
+  padding-bottom: 32rpx;
+  background: #f4f7fc;
 }
 
 .hero {
-  padding: 0 36rpx 48rpx;
+  margin: 0 24rpx;
+  padding: calc(var(--status-bar-height) + 48rpx) 28rpx 118rpx;
+  background: linear-gradient(135deg, #2c66ff 0%, #1747d6 100%);
+  border-bottom-left-radius: 34rpx;
+  border-bottom-right-radius: 34rpx;
+  border-top-left-radius: 34rpx;
+  border-top-right-radius: 34rpx;
+  box-shadow: 0 18rpx 44rpx rgba(36, 91, 238, 0.22);
 }
 
 .hero-title {
   display: block;
-  margin-top: 36rpx;
+  margin-top: 16rpx;
   font-size: 52rpx;
   font-weight: 700;
-  color: #111827;
+  color: #ffffff;
 }
 
 .hero-subtitle {
   display: block;
   margin-top: 18rpx;
   font-size: 26rpx;
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.88);
   line-height: 1.7;
 }
 
 .form-card {
-  margin: 0 24rpx;
+  margin: -76rpx 24rpx 0;
   padding: 32rpx 28rpx;
   background: #ffffff;
+  border: 2rpx solid rgba(228, 236, 250, 0.9);
   border-radius: 32rpx;
-  box-shadow: 0 16rpx 36rpx rgba(15, 23, 42, 0.08);
+  box-shadow: 0 16rpx 36rpx rgba(31, 50, 92, 0.09);
 }
 
 .card-header {
@@ -144,7 +164,7 @@ onLoad(() => {
   display: block;
   margin-top: 12rpx;
   font-size: 24rpx;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .field-wrap {
@@ -158,14 +178,21 @@ onLoad(() => {
   color: #374151;
 }
 
-.field-input {
-  width: 100%;
-  height: 92rpx;
-  padding: 0 28rpx;
-  background: #f8fafc;
-  border-radius: 22rpx;
-  font-size: 28rpx;
-  color: #111827;
+.action-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: -6rpx 0 24rpx;
+}
+
+.text-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto;
+  min-width: 0;
+  color: #2d67f6;
+  font-size: 24rpx;
+  line-height: 1;
 }
 
 .mt-20 {

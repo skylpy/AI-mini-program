@@ -15,3 +15,19 @@ export function register(data) {
     data
   })
 }
+
+export function forgotPassword(data) {
+  return request({
+    url: '/api/auth/forgot-password',
+    method: 'POST',
+    data
+  })
+}
+
+export function logout(options = {}) {
+  return request({
+    url: '/api/auth/logout',
+    method: 'POST',
+    ...options
+  })
+}

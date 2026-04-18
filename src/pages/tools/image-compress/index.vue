@@ -37,11 +37,11 @@ function handleAction() {
   height: 120rpx;
   margin: 0 auto;
   border-radius: 30rpx;
-  background: #fff7ed;
+  background: linear-gradient(180deg, #eff5ff 0%, #e5eeff 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ea580c;
+  color: #2d67f6;
   font-size: 30rpx;
   font-weight: 700;
 }

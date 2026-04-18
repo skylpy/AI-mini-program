@@ -48,8 +48,8 @@ defineProps({
 .icon-wrap {
   width: 72rpx;
   height: 72rpx;
-  border-radius: 999rpx;
-  background: #edf5ff;
+  border-radius: 22rpx;
+  background: linear-gradient(180deg, #eff5ff 0%, #e5eeff 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,17 +69,18 @@ defineProps({
 
 .title {
   font-size: 30rpx;
-  color: #111827;
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .desc {
   margin-top: 10rpx;
   font-size: 22rpx;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .arrow {
   font-size: 28rpx;
-  color: #cbd5e1;
+  color: #bfd0f8;
 }
 </style>

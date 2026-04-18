@@ -1,6 +1,8 @@
 import { useUserStore } from '../stores/user'
 
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'http://120.79.144.54:3001'
+// const BASE_URL = 'http://localhost:3000'
+// http://lin-aini.xyz/api/health
 
 function showToast(title) {
   uni.showToast({

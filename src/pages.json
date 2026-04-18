@@ -21,6 +21,12 @@
       }
     },
     {
+      "path": "pages/forgot-password/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/tabbar/home/index",
       "style": {
         "navigationStyle": "custom"
@@ -63,6 +69,24 @@
       }
     },
     {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/change-password/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/debug-logs/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/faq/index",
       "style": {
         "navigationStyle": "custom"
@@ -89,7 +113,7 @@
   ],
   "tabBar": {
     "color": "#9ca3af",
-    "selectedColor": "#ff5a5f",
+    "selectedColor": "#2d67f6",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [

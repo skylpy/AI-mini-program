@@ -97,11 +97,11 @@ function handleChooseFile() {
   width: 50rpx;
   height: 50rpx;
   border-radius: 999rpx;
-  background: #fff1f2;
+  background: #edf4ff;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ff5a5f;
+  color: #2d67f6;
   font-size: 24rpx;
   font-weight: 700;
 }

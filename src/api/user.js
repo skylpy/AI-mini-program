@@ -7,3 +7,12 @@ export function getUserProfile(options = {}) {
     ...options
   })
 }
+
+export function updatePassword(data, options = {}) {
+  return request({
+    url: '/api/user/password',
+    method: 'PUT',
+    data,
+    ...options
+  })
+}
