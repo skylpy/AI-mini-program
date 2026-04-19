@@ -3,7 +3,7 @@
     <view class="hero">
       <view class="status-bar"></view>
       <text class="hero-title">文档格式转换工具</text>
-      <text class="hero-subtitle">登录后即可体验文档转 PDF、模板浏览和转换记录等功能</text>
+      <text class="hero-subtitle">登录后即可体验文档格式转换、模板浏览和转换记录等功能</text>
     </view>
 
     <view class="form-card">

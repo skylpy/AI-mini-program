@@ -3,13 +3,13 @@ export const mockBannerList = [
   {
     id: '1',
     title: '文档格式转换',
-    image: 'https://picsum.photos/seed/doc-banner-1/1200/420',
+    image: '',
     link: ''
   },
   {
     id: '2',
     title: '职场文档模板',
-    image: 'https://picsum.photos/seed/doc-banner-2/1200/420',
+    image: '',
     link: ''
   }
 ]
@@ -17,8 +17,8 @@ export const mockBannerList = [
 export const commonToolList = [
   {
     key: 'doc-to-pdf',
-    title: '文档转 PDF',
-    subtitle: '各种文档转 PDF',
+    title: '文档格式转换',
+    subtitle: '多种文档格式互转',
     icon: 'PDF',
     iconBg: '#eaf3ff'
   },
@@ -124,7 +124,7 @@ export const mockTemplates = [
 export const mockBrowseHistory = [
   {
     id: 'B001',
-    title: '文档转 PDF 功能介绍',
+    title: '文档格式转换功能介绍',
     time: '2026-04-14 09:10'
   },
   {
@@ -142,8 +142,8 @@ export const mockBrowseHistory = [
 export const mockFaqList = [
   {
     id: 'Q001',
-    question: '支持哪些文档格式转换为 PDF？',
-    answer: '当前前端已预留 Word、Excel、PPT 等常见格式的展示入口，具体支持格式以后端能力为准。'
+    question: '支持哪些文档格式互转？',
+    answer: '当前支持的源格式与目标格式会根据后端能力动态展示，具体可转换组合以后端实际支持矩阵为准。'
   },
   {
     id: 'Q002',

@@ -81,8 +81,8 @@ const bannerList = ref([...mockBannerList])
 const homeToolList = [
   {
     key: 'doc-to-pdf',
-    title: '文档转 PDF',
-    subtitle: '各种文档转 PDF'
+    title: '文档格式转换',
+    subtitle: '多种文档格式互转'
   },
   {
     key: 'records',
