@@ -1,6 +1,38 @@
 import { useUserStore } from '../stores/user'
 import { API_BASE_URL } from './request'
 
+const OPEN_DOCUMENT_FILE_TYPES = new Set(['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'])
+const WEB_VIEW_FILE_TYPES = new Set(['html', 'htm', 'txt', 'csv'])
+
+function getFileExtension(value = '') {
+  const rawValue = String(value || '').trim()
+
+  if (!rawValue) {
+    return ''
+  }
+
+  const normalizedValue = rawValue.split('?')[0].split('#')[0]
+  const lastSlashIndex = normalizedValue.lastIndexOf('/')
+  const fileName = lastSlashIndex === -1 ? normalizedValue : normalizedValue.slice(lastSlashIndex + 1)
+  const lastDotIndex = fileName.lastIndexOf('.')
+
+  if (lastDotIndex === -1) {
+    return ''
+  }
+
+  return fileName.slice(lastDotIndex + 1).toLowerCase()
+}
+
+function resolveFileType(url = '', fileName = '', fileType = '') {
+  const explicitType = String(fileType || '').trim().toLowerCase()
+
+  if (explicitType) {
+    return explicitType
+  }
+
+  return getFileExtension(fileName) || getFileExtension(url)
+}
+
 function downloadRemoteFile(url) {
   return new Promise((resolve, reject) => {
     const userStore = useUserStore()
@@ -26,14 +58,14 @@ function downloadRemoteFile(url) {
   })
 }
 
-function openDocument(filePath) {
+function openDocument(filePath, fileType = '') {
   return new Promise((resolve, reject) => {
     uni.openDocument({
       filePath,
-      fileType: 'pdf',
+      ...(fileType ? { fileType } : {}),
       showMenu: true,
       success: resolve,
-      fail: (error) => reject(new Error(error?.errMsg || '打开 PDF 失败'))
+      fail: (error) => reject(new Error(error?.errMsg || '打开文件失败'))
     })
   })
 }
@@ -84,10 +116,41 @@ async function createProtectedFileBlobUrl(url) {
   return URL.createObjectURL(blob)
 }
 
-export async function openPdfUrl(url) {
+function canOpenByDocument(fileType = '') {
+  return OPEN_DOCUMENT_FILE_TYPES.has(String(fileType || '').toLowerCase())
+}
+
+function canOpenByWebView(fileType = '') {
+  return WEB_VIEW_FILE_TYPES.has(String(fileType || '').toLowerCase())
+}
+
+export function canOpenRemoteFile({ url = '', fileName = '', fileType = '' } = {}) {
   if (!url) {
-    throw new Error('PDF 地址不存在')
+    return false
   }
+
+  const resolvedType = resolveFileType(url, fileName, fileType)
+  return canOpenByDocument(resolvedType) || canOpenByWebView(resolvedType)
+}
+
+function navigateToFilePreview(url, title = '文件预览') {
+  return new Promise((resolve, reject) => {
+    uni.navigateTo({
+      url,
+      success: resolve,
+      fail: (error) => reject(new Error(error?.errMsg || '打开预览页失败'))
+    })
+  })
+}
+
+export async function openRemoteFileUrl(url, options = {}) {
+  if (!url) {
+    throw new Error('结果文件地址不存在')
+  }
+
+  const { fileName = '', fileType = '', title = '', recordId = '' } = options
+  const resolvedFileType = resolveFileType(url, fileName, fileType)
+  const previewTitle = title || fileName || '文件预览'
 
   // #ifdef H5
   if (isProtectedApiFileUrl(url)) {
@@ -101,13 +164,28 @@ export async function openPdfUrl(url) {
   return
   // #endif
 
+  if (canOpenByWebView(resolvedFileType)) {
+    if (!recordId) {
+      throw new Error('缺少预览记录标识')
+    }
+
+    await navigateToFilePreview(
+      `/pages/file-preview/index?id=${encodeURIComponent(recordId)}&title=${encodeURIComponent(previewTitle)}`
+    )
+    return
+  }
+
+  if (!canOpenByDocument(resolvedFileType)) {
+    throw new Error('当前文件类型暂不支持直接打开，请先下载后查看')
+  }
+
   const tempFilePath = await downloadRemoteFile(url)
-  await openDocument(tempFilePath)
+  await openDocument(tempFilePath, resolvedFileType)
 }
 
-export async function downloadPdfUrl(url, fileName = 'converted.pdf') {
+export async function downloadRemoteFileUrl(url, fileName = 'converted.file') {
   if (!url) {
-    throw new Error('PDF 地址不存在')
+    throw new Error('结果文件地址不存在')
   }
 
   // #ifdef H5
@@ -136,4 +214,15 @@ export async function downloadPdfUrl(url, fileName = 'converted.pdf') {
 
   const tempFilePath = await downloadRemoteFile(url)
   return saveLocalFile(tempFilePath)
+}
+
+export async function openPdfUrl(url, options = {}) {
+  return openRemoteFileUrl(url, {
+    ...options,
+    fileType: options.fileType || 'pdf'
+  })
+}
+
+export async function downloadPdfUrl(url, fileName = 'converted.pdf') {
+  return downloadRemoteFileUrl(url, fileName)
 }

@@ -1,7 +1,6 @@
 <template>
   <view class="reset-page">
     <view class="hero">
-      <view class="status-bar"></view>
       <PageNav title="忘记密码" />
       <text class="hero-title">重置密码</text>
       <text class="hero-subtitle">请填写注册时的用户信息，并设置一个新的登录密码</text>
@@ -202,10 +201,25 @@ function goLogin() {
 }
 
 :deep(.page-nav) {
-  margin-bottom: 18rpx;
+  background: linear-gradient(180deg, rgba(44, 102, 255, 0.94) 0%, rgba(23, 71, 214, 0.88) 100%);
 }
 
 :deep(.page-nav .nav-title) {
+  color: #ffffff;
+}
+
+:deep(.page-nav-shell) {
+  margin: 0 -28rpx 18rpx;
+}
+
+:deep(.page-nav .left-area) {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+}
+
+:deep(.page-nav .back-arrow),
+:deep(.page-nav .back-text) {
   color: #ffffff;
 }
 </style>

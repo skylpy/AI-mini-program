@@ -3,7 +3,7 @@
     <PageNav title="转换记录" />
     <view class="page-head">
       <text class="page-title">转换记录</text>
-      <text class="page-subtitle">展示源文件、目标格式、结果地址、完成时间和转换状态</text>
+      <text class="page-subtitle">展示源文件、目标格式、结果文件、完成时间和转换状态</text>
     </view>
 
     <view v-if="loading && !recordList.length" class="card-block empty-card section-gap">
@@ -20,17 +20,15 @@
       <text class="record-info">目标格式：{{ getTargetLabel(item) }}</text>
       <text class="record-info">任务类型：{{ item.taskType || '--' }}</text>
       <text class="record-info">完成时间：{{ item.finishedAtText }}</text>
-      <text class="record-info url-text">源文件地址：{{ item.sourceUrl || '--' }}</text>
-      <text class="record-info url-text">结果地址：{{ item.resultUrl || '--' }}</text>
       <text class="record-info">结果文件：{{ item.targetFileName || '--' }}</text>
       <text v-if="item.errorMsg" class="record-error">失败原因：{{ item.errorMsg }}</text>
       <view class="record-actions">
         <button
           class="secondary-btn action-btn"
-          :disabled="actionLoadingMap[item.id] || !canOpenPdf(item)"
-          @click="handleOpenPdf(item)"
+          :disabled="actionLoadingMap[item.id] || !canOpenResult(item)"
+          @click="handleOpenResult(item)"
         >
-          打开 PDF
+          打开结果
         </button>
         <button
           class="secondary-btn action-btn"
@@ -70,7 +68,7 @@ import PageNav from '../../components/PageNav.vue'
 import { getConversionResult } from '../../api/conversion'
 import { getConversionRecords } from '../../api/records'
 import { buildTargetFileName, getFormatLabel, normalizeConversionRecord } from '../../utils/conversion'
-import { downloadPdfUrl, openPdfUrl } from '../../utils/pdf'
+import { canOpenRemoteFile, downloadRemoteFileUrl, openRemoteFileUrl } from '../../utils/pdf'
 import { requireLogin } from '../../utils/guard'
 
 const recordList = ref([])
@@ -152,8 +150,12 @@ function getTargetLabel(item = {}) {
   return getFormatLabel(item.targetFormat)
 }
 
-function canOpenPdf(item = {}) {
-  return item.targetFormat === 'pdf' && !!item.resultUrl
+function canOpenResult(item = {}) {
+  return canOpenRemoteFile({
+    url: item.resultUrl,
+    fileName: item.targetFileName,
+    fileType: item.targetFormat
+  })
 }
 
 async function handleRefreshRecord(item) {
@@ -192,18 +194,23 @@ async function handleRefreshRecord(item) {
   }
 }
 
-async function handleOpenPdf(item) {
-  if (!canOpenPdf(item) || actionLoadingMap[item.id]) {
+async function handleOpenResult(item) {
+  if (!canOpenResult(item) || actionLoadingMap[item.id]) {
     return
   }
 
   actionLoadingMap[item.id] = true
 
   try {
-    await openPdfUrl(item.resultUrl)
+    await openRemoteFileUrl(item.resultUrl, {
+      recordId: item.id,
+      fileName: item.targetFileName,
+      fileType: item.targetFormat,
+      title: item.targetFileName || item.sourceFileName || '结果预览'
+    })
   } catch (error) {
     uni.showToast({
-      title: error.message || '打开 PDF 失败',
+      title: error.message || '打开结果文件失败',
       icon: 'none'
     })
   } finally {
@@ -219,7 +226,7 @@ async function handleDownloadResult(item) {
   actionLoadingMap[item.id] = true
 
   try {
-    const savedFilePath = await downloadPdfUrl(
+    const savedFilePath = await downloadRemoteFileUrl(
       item.resultUrl,
       item.targetFileName || buildTargetFileName(item.sourceFileName || '', item.targetFormat)
     )
@@ -323,10 +330,6 @@ onPullDownRefresh(async () => {
   font-size: 24rpx;
   color: #dc2626;
   line-height: 1.6;
-}
-
-.url-text {
-  word-break: break-all;
 }
 
 .record-actions {

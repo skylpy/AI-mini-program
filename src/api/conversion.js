@@ -120,3 +120,11 @@ export function getConversionResult(id, options = {}) {
     ...options
   })
 }
+
+export function getConversionPreview(id, options = {}) {
+  return request({
+    url: `/api/conversions/${id}/preview`,
+    method: 'GET',
+    ...options
+  })
+}

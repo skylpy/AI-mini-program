@@ -51,6 +51,12 @@
       }
     },
     {
+      "path": "pages/file-preview/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/templates/index",
       "style": {
         "navigationStyle": "custom"

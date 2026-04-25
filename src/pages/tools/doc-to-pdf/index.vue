@@ -33,8 +33,8 @@
       <button class="secondary-btn action-btn" :disabled="!canSubmit" @click="handleStartConversion">
         {{ actionButtonText }}
       </button>
-      <button v-if="canOpenPdf" class="secondary-btn action-btn" :disabled="busy" @click="handleOpenPdf">
-        打开 PDF
+      <button v-if="canOpenResult" class="secondary-btn action-btn" :disabled="busy" @click="handleOpenResult">
+        打开结果
       </button>
       <button v-if="canDownloadResult" class="secondary-btn action-btn" :disabled="busy" @click="handleDownloadResult">
         下载结果
@@ -52,10 +52,6 @@
       <text v-if="selectedTargetLabel" class="status-desc">目标格式：{{ selectedTargetLabel }}</text>
       <text v-if="statusHint" class="status-desc">{{ statusHint }}</text>
       <text v-if="resultRecord?.id" class="status-desc">记录 ID：{{ resultRecord.id }}</text>
-      <text v-if="resultRecord?.sourceUrl" class="status-desc url-text">源文件地址：{{ resultRecord.sourceUrl }}</text>
-      <text v-if="resultRecord?.resultUrl" class="status-desc url-text">
-        {{ resultRecord.targetFormat === 'pdf' ? 'PDF 地址' : '结果地址' }}：{{ resultRecord.resultUrl }}
-      </text>
       <text v-if="resultRecord?.targetFileName" class="status-desc">结果文件：{{ resultRecord.targetFileName }}</text>
       <text v-if="resultRecord?.finishedAt" class="status-desc">完成时间：{{ resultRecord.finishedAtText }}</text>
       <text v-if="errorMessage" class="status-error-text">{{ errorMessage }}</text>
@@ -84,7 +80,7 @@ import {
   normalizeConversionRecord
 } from '../../../utils/conversion'
 import { uploadDocumentToOss } from '../../../utils/oss-upload'
-import { downloadPdfUrl, openPdfUrl } from '../../../utils/pdf'
+import { canOpenRemoteFile, downloadRemoteFileUrl, openRemoteFileUrl } from '../../../utils/pdf'
 import { requireLogin } from '../../../utils/guard'
 
 const steps = ['选择需要转换的文档', '上传源文件到 OSS', '选择目标格式并发起转换']
@@ -110,7 +106,13 @@ const selectedTargetIndex = computed(() => {
 const selectedTargetLabel = computed(() => getFormatLabel(selectedTargetFormat.value))
 const canSubmit = computed(() => !!selectedFile.value && !!selectedTargetFormat.value && !busy.value)
 const statusMeta = computed(() => getStatusMeta(taskStatus.value))
-const canOpenPdf = computed(() => resultRecord.value?.targetFormat === 'pdf' && !!resultRecord.value?.resultUrl)
+const canOpenResult = computed(() =>
+  canOpenRemoteFile({
+    url: resultRecord.value?.resultUrl,
+    fileName: resultRecord.value?.targetFileName,
+    fileType: resultRecord.value?.targetFormat
+  })
+)
 const canDownloadResult = computed(() => !!resultRecord.value?.resultUrl)
 
 const actionButtonText = computed(() => {
@@ -139,7 +141,7 @@ const statusHint = computed(() => {
   }
 
   if (taskStatus.value === 'success') {
-    return resultRecord.value?.targetFormat === 'pdf' ? '转换完成，可直接打开或下载 PDF。' : '转换完成，可直接下载结果文件。'
+    return canOpenResult.value ? '转换完成，可直接打开或下载结果文件。' : '转换完成，可直接下载结果文件。'
   }
 
   if (taskStatus.value === 'failed') {
@@ -252,18 +254,23 @@ async function handleStartConversion() {
   }
 }
 
-async function handleOpenPdf() {
-  if (!canOpenPdf.value || busy.value) {
+async function handleOpenResult() {
+  if (!canOpenResult.value || busy.value) {
     return
   }
 
   busy.value = true
 
   try {
-    await openPdfUrl(resultRecord.value.resultUrl)
+    await openRemoteFileUrl(resultRecord.value.resultUrl, {
+      recordId: resultRecord.value.id,
+      fileName: resultRecord.value.targetFileName,
+      fileType: resultRecord.value.targetFormat,
+      title: resultRecord.value.targetFileName || '结果预览'
+    })
   } catch (error) {
     uni.showToast({
-      title: error.message || '打开 PDF 失败',
+      title: error.message || '打开结果文件失败',
       icon: 'none'
     })
   } finally {
@@ -279,7 +286,7 @@ async function handleDownloadResult() {
   busy.value = true
 
   try {
-    const savedFilePath = await downloadPdfUrl(
+    const savedFilePath = await downloadRemoteFileUrl(
       resultRecord.value.resultUrl,
       resultRecord.value.targetFileName || buildTargetFileName(selectedFile.value?.name || '', resultRecord.value.targetFormat)
     )
@@ -475,10 +482,6 @@ function handleViewRecords() {
   font-size: 24rpx;
   color: #dc2626;
   line-height: 1.7;
-}
-
-.url-text {
-  word-break: break-all;
 }
 
 .step-item {
