@@ -18,15 +18,14 @@ page {
 }
 
 .page-container {
-  --page-nav-offset: calc(var(--status-bar-height) + 24rpx);
   min-height: 100vh;
-  padding: var(--page-nav-offset) 24rpx 32rpx;
+  padding: calc(var(--status-bar-height) + 24rpx) 24rpx 32rpx;
   background: linear-gradient(180deg, #edf4ff 0, #f4f7fc 240rpx, #f4f7fc 100%);
 }
 
 /* #ifdef MP-WEIXIN */
 .page-container {
-  --page-nav-offset: calc(var(--status-bar-height) + 24rpx + 8px);
+  padding-top: calc(var(--status-bar-height) + 24rpx + 8px);
 }
 /* #endif */
 

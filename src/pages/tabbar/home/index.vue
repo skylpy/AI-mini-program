@@ -25,16 +25,31 @@
       <view class="section-head">
         <text class="section-title">常用工具</text>
         <view class="section-link" @click="handleViewAll">
-          <text class="section-link-text">查看全部</text>
-          <text class="section-link-arrow">></text>
+          <!-- <text class="section-link-text">查看全部</text> -->
+          <!-- <text class="section-link-arrow">></text> -->
         </view>
       </view>
 
-      <view class="tool-grid">
+      <view class="tool-grid tool-grid-primary">
         <view
-          v-for="item in homeToolList"
+          v-for="item in commonToolPrimary"
           :key="item.key"
-          class="tool-card"
+          class="tool-card tool-card-primary"
+          @click="handleCommonToolClick(item)"
+        >
+          <view class="tool-icon-wrap tool-icon-wrap-primary">
+            <image class="tool-icon" :src="toolIconMap[item.key]" mode="aspectFit" />
+          </view>
+          <text class="tool-title">{{ item.title }}</text>
+          <text class="tool-subtitle">{{ item.subtitle }}</text>
+        </view>
+      </view>
+
+      <view class="tool-grid tool-grid-secondary">
+        <view
+          v-for="(item, index) in commonToolSecondary"
+          :key="item.key"
+          :class="['tool-card', 'tool-card-secondary', isSecondaryToolWide(index) && 'tool-card-wide']"
           @click="handleCommonToolClick(item)"
         >
           <view class="tool-icon-wrap">
@@ -85,10 +100,15 @@ const homeToolList = [
     subtitle: '多种文档格式互转'
   },
   {
-    key: 'records',
-    title: '转换记录',
-    subtitle: '查看文档转换记录'
+    key: 'image-to-pdf',
+    title: '图片转 PDF',
+    subtitle: '多图合并生成 PDF'
   },
+  // {
+  //   key: 'records',
+  //   title: '转换记录',
+  //   subtitle: '查看文档转换记录'
+  // },
   {
     key: 'templates',
     title: '文档模板',
@@ -99,24 +119,20 @@ const homeToolList = [
     title: '更多功能',
     subtitle: '正在开发更新中'
   },
-  {
-    key: 'service',
-    title: '联系客服',
-    subtitle: '解答使用问题'
-  },
-  {
-    key: 'share',
-    title: '好友分享',
-    subtitle: '分享给您的好友'
-  }
+  // {
+  //   key: 'service',
+  //   title: '联系客服',
+  //   subtitle: '解答使用问题'
+  // }
+  // ,
+  // {
+  //   key: 'share',
+  //   title: '好友分享',
+  //   subtitle: '分享给您的好友'
+  // }
 ]
 
 const extraToolList = [
-  {
-    key: 'image-compress',
-    title: '图片压缩',
-    subtitle: '图片大小压缩'
-  },
   {
     key: 'flower-recognition',
     title: '花费说明',
@@ -125,6 +141,8 @@ const extraToolList = [
 ]
 
 const featuredBanner = computed(() => bannerList.value[0] || {})
+const commonToolPrimary = computed(() => homeToolList.slice(0, 2))
+const commonToolSecondary = computed(() => homeToolList.slice(2))
 
 function svgToDataUri(svg) {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
@@ -149,8 +167,8 @@ const toolIconMap = {
   share: svgToDataUri(
     '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none"><circle cx="20" cy="32" r="5" stroke="#3B6FF6" stroke-width="3.2"/><circle cx="43" cy="20" r="5" stroke="#3B6FF6" stroke-width="3.2"/><circle cx="43" cy="44" r="5" stroke="#3B6FF6" stroke-width="3.2"/><path d="M25 30l13-7M25 34l13 7" stroke="#3B6FF6" stroke-width="3.2" stroke-linecap="round"/></svg>'
   ),
-  'image-compress': svgToDataUri(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="16" y="14" width="32" height="36" rx="6" stroke="#3B6FF6" stroke-width="3.2"/><path d="M24 24h16M24 32h12M24 40h9" stroke="#3B6FF6" stroke-width="3.2" stroke-linecap="round"/><path d="m42 18 6 6-6 6" stroke="#3B6FF6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  'image-to-pdf': svgToDataUri(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="16" y="12" width="18" height="22" rx="4" stroke="#3B6FF6" stroke-width="3.2"/><rect x="30" y="20" width="18" height="22" rx="4" stroke="#3B6FF6" stroke-width="3.2"/><path d="M22 24h6M36 32h6" stroke="#3B6FF6" stroke-width="3.2" stroke-linecap="round"/><path d="M20 48h24" stroke="#3B6FF6" stroke-width="3.2" stroke-linecap="round"/><path d="M32 40v8" stroke="#3B6FF6" stroke-width="3.2" stroke-linecap="round"/></svg>'
   ),
   'flower-recognition': svgToDataUri(
     '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none"><path d="M22 18c6 0 10 4 10 10-6 0-10-4-10-10ZM42 18c0 6-4 10-10 10 0-6 4-10 10-10Z" stroke="#3B6FF6" stroke-width="3.2" stroke-linejoin="round"/><path d="M32 28v18" stroke="#3B6FF6" stroke-width="3.2" stroke-linecap="round"/><path d="M24 46c0-5 3.6-9 8-9s8 4 8 9" stroke="#3B6FF6" stroke-width="3.2" stroke-linecap="round"/></svg>'
@@ -178,9 +196,14 @@ function navigate(url) {
   uni.navigateTo({ url })
 }
 
+function isSecondaryToolWide(index) {
+  return commonToolSecondary.value.length % 2 === 1 && index === commonToolSecondary.value.length - 1
+}
+
 function handleCommonToolClick(item) {
   const routeMap = {
     'doc-to-pdf': '/pages/tools/doc-to-pdf/index',
+    'image-to-pdf': '/pages/tools/image-to-pdf/index',
     records: '/pages/records/index',
     templates: '/pages/templates/index',
     service: '/pages/service/index'
@@ -225,9 +248,7 @@ function handleViewAll() {
 }
 
 function handleExtraToolClick(item) {
-  const routeMap = {
-    'image-compress': '/pages/tools/image-compress/index'
-  }
+  const routeMap = {}
 
   const url = routeMap[item.key]
   if (url) {
@@ -446,17 +467,38 @@ onShareAppMessage(() => ({
 
 .tool-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20rpx;
 }
 
+.tool-grid-primary,
+.tool-grid-secondary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tool-grid-secondary {
+  margin-top: 20rpx;
+}
+
 .tool-card {
-  min-height: 188rpx;
   padding: 24rpx 22rpx 20rpx;
   background: #ffffff;
   border-radius: 26rpx;
   border: 2rpx solid rgba(228, 236, 250, 0.9);
   box-shadow: 0 12rpx 24rpx rgba(31, 50, 92, 0.07);
+}
+
+.tool-card-primary {
+  min-height: 208rpx;
+  padding: 28rpx 24rpx 24rpx;
+}
+
+.tool-card-secondary {
+  min-height: 164rpx;
+}
+
+.tool-card-wide {
+  grid-column: 1 / -1;
+  min-height: 152rpx;
 }
 
 .tool-icon-wrap {
@@ -467,6 +509,12 @@ onShareAppMessage(() => ({
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.tool-icon-wrap-primary {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 24rpx;
 }
 
 .tool-icon {
@@ -489,4 +537,5 @@ onShareAppMessage(() => ({
   line-height: 1.55;
   color: #6b7280;
 }
+
 </style>

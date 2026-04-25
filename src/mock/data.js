@@ -23,6 +23,13 @@ export const commonToolList = [
     iconBg: '#eaf3ff'
   },
   {
+    key: 'image-to-pdf',
+    title: '图片转 PDF',
+    subtitle: '多图合并生成 PDF',
+    icon: 'IMG',
+    iconBg: '#fff7ed'
+  },
+  {
     key: 'records',
     title: '转换记录',
     subtitle: '我的文档转换记录',
@@ -60,13 +67,6 @@ export const commonToolList = [
 ]
 
 export const extraToolList = [
-  {
-    key: 'image-compress',
-    title: '图片压缩',
-    subtitle: '图片大小压缩',
-    icon: 'IMG',
-    iconBg: '#fff7ed'
-  },
   {
     key: 'flower-recognition',
     title: '花草识别',

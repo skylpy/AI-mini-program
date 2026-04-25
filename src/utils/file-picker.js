@@ -1,4 +1,5 @@
 import { SUPPORTED_SOURCE_TYPES, formatFileSize, validateDocumentFile } from './conversion'
+import { normalizeUploadFile } from './upload-file'
 
 function normalizeSelectedFile(file = {}) {
   const validation = validateDocumentFile(file)
@@ -7,12 +8,11 @@ function normalizeSelectedFile(file = {}) {
     throw new Error(validation.message)
   }
 
+  const normalizedFile = normalizeUploadFile(file, file.name || 'file')
+
   return {
-    name: file.name,
-    size: Number(file.size) || 0,
-    sizeText: formatFileSize(file.size),
-    path: file.path || '',
-    file: file.file || null,
+    ...normalizedFile,
+    sizeText: formatFileSize(normalizedFile.size),
     sourceType: validation.sourceType
   }
 }

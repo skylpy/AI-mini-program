@@ -105,10 +105,10 @@ const firstGroup = [
 ]
 
 const secondGroup = [
-  { key: 'settings', title: '设置', desc: '账号与安全设置' },
+  // { key: 'settings', title: '设置', desc: '账号与安全设置' },
   { key: 'service', title: '联系客服', desc: '联系人工客服' },
   { key: 'feedback', title: '我要反馈', desc: '提交建议与问题' },
-  { key: 'share', title: '好用分享', desc: '分享给更多好友' }
+  // { key: 'share', title: '好用分享', desc: '分享给更多好友' }
 ]
 
 const userInfo = computed(() => userStore.state.userInfo || {})

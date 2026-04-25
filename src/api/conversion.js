@@ -1,5 +1,6 @@
 import request, { buildApiUrl } from '../utils/request'
 import { useUserStore } from '../stores/user'
+import { hasValidUploadFilePath, normalizeUploadFile } from '../utils/upload-file'
 
 export function getOssUploadSettings(options = {}) {
   const querySuffix = `t=${Date.now()}`
@@ -30,12 +31,13 @@ export const createPdfConversionByUrl = createConversionByUrl
 export async function createConversionByFile(fileInfo, data = {}, options = {}) {
   const userStore = useUserStore()
   const token = userStore.state.token
+  const normalizedFileInfo = normalizeUploadFile(fileInfo, fileInfo?.name || 'file')
 
   // #ifdef H5
   const formData = new FormData()
 
-  if (fileInfo?.file) {
-    formData.append('file', fileInfo.file, fileInfo.name)
+  if (normalizedFileInfo?.file) {
+    formData.append('file', normalizedFileInfo.file, normalizedFileInfo.name)
   }
 
   Object.entries(data).forEach(([key, value]) => {
@@ -65,10 +67,15 @@ export async function createConversionByFile(fileInfo, data = {}, options = {}) 
   // #endif
 
   // #ifdef MP-WEIXIN
+  if (!hasValidUploadFilePath(normalizedFileInfo)) {
+    console.error('文件路径不存在，当前文件对象：', fileInfo)
+    throw new Error('文件路径不存在，请重新选择文件')
+  }
+
   return new Promise((resolve, reject) => {
     uni.uploadFile({
       url: buildApiUrl('/api/conversions'),
-      filePath: fileInfo.path,
+      filePath: normalizedFileInfo.filePath,
       name: 'file',
       header: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -127,4 +134,107 @@ export function getConversionPreview(id, options = {}) {
     method: 'GET',
     ...options
   })
+}
+
+export function createImageToPdf(data = {}, options = {}) {
+  const { images = [], title = '' } = data
+  const userStore = useUserStore()
+  const token = userStore.state.token || uni.getStorageSync('token') || ''
+
+  // #ifdef MP-WEIXIN
+  if (!images.length) {
+    return Promise.reject(new Error('请先选择图片'))
+  }
+
+  const normalizedImages = images.map((item, index) => ({
+    item,
+    image: normalizeUploadFile(item, `image-${index + 1}`)
+  }))
+  const invalidImage = normalizedImages.find(({ image }) => !hasValidUploadFilePath(image))
+
+  if (invalidImage) {
+    console.error('图片路径不存在，当前图片对象：', invalidImage.item)
+    return Promise.reject(new Error('图片路径不存在，请重新选择图片'))
+  }
+
+  return new Promise((resolve, reject) => {
+    const [firstImage, ...restImages] = normalizedImages.map(({ image }) => image)
+    const uploadImages = restImages.map((image) => ({
+      name: 'images',
+      uri: image.filePath
+    }))
+
+    uni.uploadFile({
+      url: buildApiUrl('/api/conversions/image-to-pdf'),
+      // 小程序端会校验顶层 filePath/name；后端又要求字段名必须是 images。
+      // 因此首张图走顶层参数，其余图片走 files，统一使用 images 字段。
+      filePath: firstImage.filePath,
+      name: 'images',
+      files: uploadImages,
+      formData: {
+        title
+      },
+      header: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.header || {})
+      },
+      success: (response) => {
+        let responseData = {}
+
+        try {
+          responseData = JSON.parse(response.data || '{}')
+        } catch (error) {
+          responseData = {}
+        }
+
+        if (
+          response.statusCode >= 200 &&
+          response.statusCode < 300 &&
+          (typeof responseData?.code === 'undefined' || responseData.code === 0)
+        ) {
+          resolve(responseData)
+          return
+        }
+
+        reject(new Error(responseData?.message || 'PDF 生成失败'))
+      },
+      fail: (error) => {
+        reject(new Error(error?.errMsg || '上传图片失败'))
+      }
+    })
+  })
+  // #endif
+
+  // #ifdef H5
+  const formData = new FormData()
+
+  images.forEach((item, index) => {
+    const normalizedImage = normalizeUploadFile(item, `image-${index + 1}`)
+
+    if (normalizedImage.file) {
+      formData.append('images', normalizedImage.file, normalizedImage.name)
+    }
+  })
+
+  if (title) {
+    formData.append('title', title)
+  }
+
+  return fetch(buildApiUrl('/api/conversions/image-to-pdf'), {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options.header || {})
+    },
+    body: formData
+  }).then(async (response) => {
+    const responseData = await response.json().catch(() => ({}))
+
+    if (response.ok && (typeof responseData?.code === 'undefined' || responseData.code === 0)) {
+      return responseData
+    }
+
+    throw new Error(responseData?.message || 'PDF 生成失败')
+  })
+  // #endif
 }

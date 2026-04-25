@@ -111,6 +111,12 @@
       }
     },
     {
+      "path": "pages/tools/image-to-pdf/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/tools/flower-recognition/index",
       "style": {
         "navigationStyle": "custom"

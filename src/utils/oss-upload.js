@@ -1,5 +1,6 @@
 import { getOssUploadSettings } from '../api/conversion'
 import { buildOssSourceKey, joinUrl } from './conversion'
+import { hasValidUploadFilePath, normalizeUploadFile } from './upload-file'
 
 function getEnvironmentUploadConfig() {
   return {
@@ -133,10 +134,17 @@ function createUploadFormData(config = {}, key = '') {
 }
 
 function uploadFileByMiniProgram(uploadUrl, fileInfo, formData) {
+  const normalizedFileInfo = normalizeUploadFile(fileInfo, fileInfo?.name || 'file')
+
+  if (!hasValidUploadFilePath(normalizedFileInfo)) {
+    console.error('文件路径不存在，当前文件对象：', fileInfo)
+    throw new Error('文件路径不存在，请重新选择文件')
+  }
+
   return new Promise((resolve, reject) => {
     uni.uploadFile({
       url: uploadUrl,
-      filePath: fileInfo.path,
+      filePath: normalizedFileInfo.filePath,
       name: 'file',
       formData,
       success: (response) => {
@@ -155,6 +163,7 @@ function uploadFileByMiniProgram(uploadUrl, fileInfo, formData) {
 }
 
 async function uploadFileByH5(uploadUrl, fileInfo, formData) {
+  const normalizedFileInfo = normalizeUploadFile(fileInfo, fileInfo?.name || 'file')
   const payload = new FormData()
 
   Object.entries(formData).forEach(([key, value]) => {
@@ -163,7 +172,7 @@ async function uploadFileByH5(uploadUrl, fileInfo, formData) {
     }
   })
 
-  payload.append('file', fileInfo.file, fileInfo.name)
+  payload.append('file', normalizedFileInfo.file, normalizedFileInfo.name)
 
   const requestUrl = import.meta.env.DEV ? '/__oss_upload' : uploadUrl
 
@@ -180,18 +189,19 @@ async function uploadFileByH5(uploadUrl, fileInfo, formData) {
 }
 
 export async function uploadDocumentToOss(fileInfo, options = {}) {
+  const normalizedFileInfo = normalizeUploadFile(fileInfo, fileInfo?.name || 'file')
   const config = options.config || (await getOssUploadConfig())
   assertUploadConfig(config)
 
-  const sourceKey = options.sourceKey || buildOssSourceKey(fileInfo.name, config.dir)
+  const sourceKey = options.sourceKey || buildOssSourceKey(normalizedFileInfo.name, config.dir)
   const formData = createUploadFormData(config, sourceKey)
 
   // #ifdef MP-WEIXIN
-  await uploadFileByMiniProgram(config.uploadHost, fileInfo, formData)
+  await uploadFileByMiniProgram(config.uploadHost, normalizedFileInfo, formData)
   // #endif
 
   // #ifdef H5
-  await uploadFileByH5(config.uploadHost, fileInfo, formData)
+  await uploadFileByH5(config.uploadHost, normalizedFileInfo, formData)
   // #endif
 
   return {

@@ -7,12 +7,12 @@
     </view>
 
     <view class="card-block section-gap">
-      <ListCell
+      <!-- <ListCell
         title="调试日志"
         desc="查看应用内 console 输出"
         icon="LOG"
         @click="goDebugLogs"
-      />
+      /> -->
       <ListCell
         title="修改密码"
         desc="更新当前账号登录密码"
