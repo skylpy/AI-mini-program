@@ -12,20 +12,66 @@
       <text class="service-title mt-24">联系方式</text>
       <text class="service-desc">微信客服：doc-helper-01</text>
       <text class="service-desc">邮箱：service@example.com</text>
-      <button class="primary-btn mt-36" @click="handleContact">立即联系</button>
+      <!-- #ifdef MP-WEIXIN -->
+      <button
+        class="primary-btn mt-36 contact-btn"
+        open-type="contact"
+        show-message-card
+        :send-message-title="contactMessageTitle"
+        :send-message-path="contactMessagePath"
+        :send-message-img="contactMessageImage"
+      >
+        立即联系
+      </button>
+      <!-- #endif -->
+
+      <!-- #ifndef MP-WEIXIN -->
+      <button class="primary-btn mt-36 contact-btn" @click="handleContact">立即联系</button>
+      <!-- #endif -->
     </view>
   </view>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import PageNav from '../../components/PageNav.vue'
+
+const contactMessageTitle = ref('联系客服')
+const contactMessagePath = ref('/pages/service/index')
+const contactMessageImage = '/static/tabbar/profile-active.png'
+
+function buildCurrentPagePath() {
+  const pages = getCurrentPages()
+  const currentPage = pages[pages.length - 1]
+
+  if (!currentPage?.route) {
+    return '/pages/service/index'
+  }
+
+  const query = Object.entries(currentPage.options || {})
+    .filter(([, value]) => value !== '' && value !== null && typeof value !== 'undefined')
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&')
+
+  return `/${currentPage.route}${query ? `?${query}` : ''}`
+}
+
+function syncContactMessage() {
+  contactMessageTitle.value = '联系客服'
+  contactMessagePath.value = buildCurrentPagePath()
+}
 
 function handleContact() {
   uni.showToast({
-    title: '请接入真实客服能力',
+    title: '请在微信小程序中使用在线客服',
     icon: 'none'
   })
 }
+
+onShow(() => {
+  syncContactMessage()
+})
 </script>
 
 <style scoped lang="scss">
@@ -53,5 +99,9 @@ function handleContact() {
 
 .mt-36 {
   margin-top: 36rpx;
+}
+
+.contact-btn {
+  width: 100%;
 }
 </style>
