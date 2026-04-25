@@ -10,23 +10,28 @@
       :disabled="disabled"
       @input="handleInput"
       @focus="focused = true"
-      @blur="focused = false"
+      @blur="handleBlur"
     />
     <view v-if="showActions" class="input-actions">
-      <text
-        v-if="passwordToggle"
-        class="action-text toggle-text"
-        @click="passwordVisible = !passwordVisible"
-      >
-        {{ passwordVisible ? '隐藏' : '显示' }}
-      </text>
-      <text v-if="showClear" class="action-text clear-text" @click="handleClear">清除</text>
+      <view v-if="passwordToggle" class="icon-action" @click="togglePassword">
+        <image
+          class="action-icon toggle-icon"
+          :src="passwordVisible ? passwordShowIcon : passwordHideIcon"
+          mode="aspectFit"
+        />
+      </view>
+      <view v-if="showClear" class="icon-action" @click="handleClear">
+        <image class="action-icon clear-icon" :src="clearIcon" mode="aspectFit" />
+      </view>
     </view>
   </view>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
+import clearIcon from '../static/normal/icon_input_clear.png'
+import passwordHideIcon from '../static/normal/icon_pwd_hide.png'
+import passwordShowIcon from '../static/normal/icon_pwd_show.png'
 
 const props = defineProps({
   modelValue: {
@@ -68,7 +73,9 @@ const emit = defineEmits(['update:modelValue'])
 const focused = ref(false)
 const passwordVisible = ref(false)
 
-const showClear = computed(() => props.clearable && !!props.modelValue && !props.disabled)
+const showClear = computed(
+  () => props.clearable && !!props.modelValue && !props.disabled && !props.passwordToggle
+)
 const showActions = computed(() => showClear.value || props.passwordToggle)
 
 function normalizeValue(value) {
@@ -83,7 +90,20 @@ function handleInput(event) {
 }
 
 function handleClear() {
+  passwordVisible.value = false
   emit('update:modelValue', '')
+}
+
+function handleBlur() {
+  focused.value = false
+}
+
+function togglePassword() {
+  if (props.disabled) {
+    return
+  }
+
+  passwordVisible.value = !passwordVisible.value
 }
 </script>
 
@@ -120,13 +140,17 @@ function handleClear() {
   flex-shrink: 0;
 }
 
-.action-text {
-  font-size: 22rpx;
-  line-height: 1;
-  color: #2d67f6;
+.icon-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52rpx;
+  height: 52rpx;
 }
 
-.clear-text {
-  color: #8aa1d9;
+.action-icon {
+  width: 34rpx;
+  height: 34rpx;
+  flex-shrink: 0;
 }
 </style>

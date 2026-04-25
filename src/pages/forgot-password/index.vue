@@ -2,7 +2,7 @@
   <view class="reset-page">
     <view class="hero">
       <view class="status-bar"></view>
-      <PageNav title="忘记密码" :fixed="false" />
+      <!-- <PageNav title="忘记密码" /> -->
       <text class="hero-title">重置密码</text>
       <text class="hero-subtitle">请填写注册时的用户信息，并设置一个新的登录密码</text>
     </view>

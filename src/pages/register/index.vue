@@ -2,7 +2,7 @@
   <view class="register-page">
     <view class="hero">
       <view class="status-bar"></view>
-      <PageNav title="注册" :fixed="false" />
+      <!-- <PageNav title="注册" :fixed="false" /> -->
       <text class="hero-title">创建账号</text>
       <text class="hero-subtitle">完成注册后即可登录并使用文档转换相关功能</text>
     </view>

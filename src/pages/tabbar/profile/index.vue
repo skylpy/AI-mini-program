@@ -23,7 +23,7 @@
           <text class="username">{{ userInfo.username || '微信用户' }}</text>
           <text class="user-tag">已登录</text>
         </view>
-        <text class="user-id">ID：{{ userInfo.id || '--' }}</text>
+        <text class="user-id">Account：{{ userInfo.mobile || '--' }}</text>
         <text class="user-desc">查看您的转换记录、浏览历史和账户设置</text>
       </view>
     </view>

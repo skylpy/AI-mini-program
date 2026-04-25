@@ -135,8 +135,8 @@ const homeToolList = [
 const extraToolList = [
   {
     key: 'flower-recognition',
-    title: '花费说明',
-    subtitle: '功能收费说明'
+    title: '花草鉴别',
+    subtitle: '识别常见花草植物'
   }
 ]
 
@@ -256,7 +256,7 @@ function handleExtraToolClick(item) {
     return
   }
 
-  uni.showToast({ title: '功能说明整理中', icon: 'none' })
+  uni.showToast({ title: '花草鉴别开发中', icon: 'none' })
 }
 
 function goSettings() {
