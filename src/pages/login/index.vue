@@ -121,11 +121,34 @@ async function handleWechatPhoneLogin(event) {
   return
   // #endif
 
-  const phoneCode = event?.detail?.code || ''
+  const detail = event?.detail || {}
+  const phoneCode = detail.code || ''
+  const encryptedData = detail.encryptedData || ''
+  const iv = detail.iv || ''
+  const errMsg = detail.errMsg || ''
 
-  if (!phoneCode) {
+  console.log('getPhoneNumber detail', detail)
+
+  if (!phoneCode && !(encryptedData && iv)) {
+    if (/deny|cancel/i.test(errMsg)) {
+      uni.showToast({
+        title: '你已取消微信手机号授权',
+        icon: 'none'
+      })
+      return
+    }
+
+    if (/no permission/i.test(errMsg)) {
+      uni.showModal({
+        title: '无法获取手机号',
+        content: '当前小程序没有获取手机号权限。请确认小程序主体不是个人类型，且已完成认证并开通该能力。',
+        showCancel: false
+      })
+      return
+    }
+
     uni.showToast({
-      title: event?.detail?.errMsg?.includes('deny') ? '你已取消微信手机号授权' : '未获取到微信手机号授权',
+      title: errMsg || '未获取到微信手机号授权',
       icon: 'none'
     })
     return
@@ -137,7 +160,9 @@ async function handleWechatPhoneLogin(event) {
     const loginCode = await getWechatLoginCode()
     const res = await wechatMiniProgramLogin({
       loginCode,
-      phoneCode
+      phoneCode,
+      encryptedData,
+      iv
     })
 
     userStore.setLogin(res.data)
