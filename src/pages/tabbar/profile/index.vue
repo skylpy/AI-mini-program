@@ -49,7 +49,7 @@
                 <text class="menu-desc">{{ item.desc }}</text>
               </view>
             </view>
-            <text class="menu-arrow">></text>
+            <image class="menu-arrow" :src="enterIcon" mode="aspectFit" />
           </view>
         </view>
       </view>
@@ -74,7 +74,7 @@
                 <text class="menu-desc">{{ item.desc }}</text>
               </view>
             </view>
-            <text class="menu-arrow">></text>
+            <image class="menu-arrow" :src="enterIcon" mode="aspectFit" />
           </view>
         </view>
       </view>
@@ -95,12 +95,13 @@ import { logout } from '../../../api/auth'
 import { getUserProfile } from '../../../api/user'
 import { requireLogin } from '../../../utils/guard'
 import { useUserStore } from '../../../stores/user'
+import enterIcon from '../../../static/normal/icon_enter.png'
 
 const userStore = useUserStore()
 
 const firstGroup = [
   { key: 'records', title: '转换记录', desc: '查看最近转换历史' },
-  { key: 'browse-history', title: '我的浏览', desc: '查看最近访问内容' },
+  { key: 'downloads', title: '我的下载', desc: '查看已下载文件' },
   { key: 'faq', title: '常见问题', desc: '快速获取使用帮助' }
 ]
 
@@ -127,8 +128,8 @@ const menuIconMap = {
   records: svgToDataUri(
     '<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="14" stroke="#3B6FF6" stroke-width="2.8"/><path d="M26 18v8l5 4" stroke="#3B6FF6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   ),
-  'browse-history': svgToDataUri(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none"><path d="M10 26s6-10 16-10 16 10 16 10-6 10-16 10-16-10-16-10Z" stroke="#3B6FF6" stroke-width="2.8" stroke-linejoin="round"/><circle cx="26" cy="26" r="4.5" stroke="#3B6FF6" stroke-width="2.8"/></svg>'
+  downloads: svgToDataUri(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none"><path d="M26 12v17" stroke="#3B6FF6" stroke-width="2.8" stroke-linecap="round"/><path d="M20.5 24.5 26 30l5.5-5.5" stroke="#3B6FF6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 33v3a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5v-3" stroke="#3B6FF6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   ),
   faq: svgToDataUri(
     '<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none"><path d="M26 42c8.837 0 16-6.716 16-15S34.837 12 26 12 10 18.716 10 27c0 3.226 1.087 6.214 2.935 8.654L12 42l6.398-2.996A16.58 16.58 0 0 0 26 42Z" stroke="#3B6FF6" stroke-width="2.8" stroke-linejoin="round"/><path d="M21.5 22.5a4.8 4.8 0 1 1 8.3 3.3c-1.4 1.4-2.8 2.2-2.8 4.2" stroke="#3B6FF6" stroke-width="2.8" stroke-linecap="round"/><circle cx="27" cy="34.5" r="1.2" fill="#3B6FF6"/></svg>'
@@ -161,7 +162,7 @@ async function fetchProfile() {
 function handleMenuClick(item) {
   const routeMap = {
     records: '/pages/records/index',
-    'browse-history': '/pages/browse-history/index',
+    downloads: '/pages/browse-history/index',
     faq: '/pages/faq/index',
     settings: '/pages/settings/index',
     service: '/pages/service/index',
@@ -449,8 +450,9 @@ onShow(async () => {
 }
 
 .menu-arrow {
-  font-size: 28rpx;
-  color: #bfd0f8;
+  width: 28rpx;
+  height: 28rpx;
+  flex-shrink: 0;
 }
 
 .logout-wrap {

@@ -9,11 +9,13 @@
         <text v-if="desc" class="desc">{{ desc }}</text>
       </view>
     </view>
-    <text class="arrow">></text>
+    <image class="arrow" :src="enterIcon" mode="aspectFit" />
   </view>
 </template>
 
 <script setup>
+import enterIcon from '../static/normal/icon_enter.png'
+
 defineEmits(['click'])
 
 defineProps({
@@ -80,7 +82,8 @@ defineProps({
 }
 
 .arrow {
-  font-size: 28rpx;
-  color: #bfd0f8;
+  width: 28rpx;
+  height: 28rpx;
+  flex-shrink: 0;
 }
 </style>

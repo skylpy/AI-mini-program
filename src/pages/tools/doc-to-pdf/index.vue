@@ -79,6 +79,7 @@ import {
   getStatusMeta,
   normalizeConversionRecord
 } from '../../../utils/conversion'
+import { trackDownloadHistory } from '../../../utils/download-history'
 import { uploadDocumentToOss } from '../../../utils/oss-upload'
 import { canOpenRemoteFile, downloadRemoteFileUrl, openRemoteFileUrl } from '../../../utils/pdf'
 import { requireLogin } from '../../../utils/guard'
@@ -286,10 +287,22 @@ async function handleDownloadResult() {
   busy.value = true
 
   try {
+    const fileName =
+      resultRecord.value.targetFileName || buildTargetFileName(selectedFile.value?.name || '', resultRecord.value.targetFormat)
     const savedFilePath = await downloadRemoteFileUrl(
       resultRecord.value.resultUrl,
-      resultRecord.value.targetFileName || buildTargetFileName(selectedFile.value?.name || '', resultRecord.value.targetFormat)
+      fileName
     )
+
+    await trackDownloadHistory({
+      recordId: resultRecord.value.id,
+      fileName,
+      fileUrl: resultRecord.value.resultUrl,
+      fileType: resultRecord.value.targetFormat,
+      sourceType: 'conversion',
+      sourcePage: 'doc-to-pdf',
+      sourceName: selectedFile.value?.name || '文档格式转换'
+    })
 
     // #ifdef MP-WEIXIN
     uni.showToast({

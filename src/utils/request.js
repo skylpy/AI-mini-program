@@ -1,8 +1,8 @@
 import { useUserStore } from '../stores/user'
 
-// const DEFAULT_BASE_URL = 'http://localhost:3000'
+const DEFAULT_BASE_URL = 'http://localhost:3000'
 // const DEFAULT_BASE_URL = 'http://120.79.144.54:3001'
-const DEFAULT_BASE_URL = 'https://api.lin-aini.xyz'
+// const DEFAULT_BASE_URL = 'https://api.lin-aini.xyz'
 
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL || DEFAULT_BASE_URL).trim().replace(/\/+$/, '')
 let shownConfigError = false

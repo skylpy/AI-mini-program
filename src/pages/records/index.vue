@@ -68,6 +68,7 @@ import PageNav from '../../components/PageNav.vue'
 import { getConversionResult } from '../../api/conversion'
 import { getConversionRecords } from '../../api/records'
 import { buildTargetFileName, getFormatLabel, normalizeConversionRecord } from '../../utils/conversion'
+import { trackDownloadHistory } from '../../utils/download-history'
 import { canOpenRemoteFile, downloadRemoteFileUrl, openRemoteFileUrl } from '../../utils/pdf'
 import { requireLogin } from '../../utils/guard'
 
@@ -226,10 +227,21 @@ async function handleDownloadResult(item) {
   actionLoadingMap[item.id] = true
 
   try {
+    const fileName = item.targetFileName || buildTargetFileName(item.sourceFileName || '', item.targetFormat)
     const savedFilePath = await downloadRemoteFileUrl(
       item.resultUrl,
-      item.targetFileName || buildTargetFileName(item.sourceFileName || '', item.targetFormat)
+      fileName
     )
+
+    await trackDownloadHistory({
+      recordId: item.id,
+      fileName,
+      fileUrl: item.resultUrl,
+      fileType: item.targetFormat,
+      sourceType: 'conversion',
+      sourcePage: 'records',
+      sourceName: item.sourceFileName || item.toolType || '转换记录'
+    })
 
     // #ifdef MP-WEIXIN
     uni.showToast({

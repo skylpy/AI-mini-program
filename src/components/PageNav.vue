@@ -1,7 +1,7 @@
 <template>
   <view class="page-nav">
     <view class="left-area" @click="handleBack">
-      <text class="back-arrow">‹</text>
+      <image class="back-arrow" :src="backIcon" mode="aspectFit" />
       <text class="back-text">返回</text>
     </view>
     <text class="nav-title">{{ title }}</text>
@@ -11,6 +11,7 @@
 
 <script setup>
 import { useUserStore } from '../stores/user'
+import backIcon from '../static/normal/icon_back.png'
 
 const props = defineProps({
   title: {
@@ -66,12 +67,9 @@ function handleBack() {
 }
 
 .back-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 34rpx;
-  color: #475569;
-  line-height: 1;
+  width: 24rpx;
+  height: 24rpx;
+  flex-shrink: 0;
 }
 
 .back-text {
