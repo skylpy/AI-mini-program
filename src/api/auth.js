@@ -8,6 +8,14 @@ export function login(data) {
   })
 }
 
+export function wechatMiniProgramLogin(data) {
+  return request({
+    url: '/api/auth/wechat-mini-program/login',
+    method: 'POST',
+    data
+  })
+}
+
 export function register(data) {
   return request({
     url: '/api/auth/register',

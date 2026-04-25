@@ -28,6 +28,16 @@
 
       <button class="primary-btn" @click="handleLogin">登录</button>
       <button class="secondary-btn mt-20" @click="goRegister">去注册</button>
+
+      <!-- #ifdef MP-WEIXIN -->
+      <view class="wechat-login-divider">
+        <text class="wechat-login-divider__text">或</text>
+      </view>
+      <button class="wechat-btn mt-20" open-type="getPhoneNumber" @getphonenumber="handleWechatPhoneLogin">
+        微信手机号快捷登录
+      </button>
+      <text class="wechat-login-tip">首次登录会自动创建账号，已注册手机号会自动绑定当前微信</text>
+      <!-- #endif -->
     </view>
   </view>
 </template>
@@ -36,7 +46,7 @@
 import { reactive } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import FormInput from '../../components/FormInput.vue'
-import { login } from '../../api/auth'
+import { login, wechatMiniProgramLogin } from '../../api/auth'
 import { goHome } from '../../utils/guard'
 import { useUserStore } from '../../stores/user'
 
@@ -82,6 +92,62 @@ async function handleLogin() {
     }, 250)
   } catch (error) {
     console.error('login error', error)
+  } finally {
+    uni.hideLoading()
+  }
+}
+
+function getWechatLoginCode() {
+  return new Promise((resolve, reject) => {
+    uni.login({
+      provider: 'weixin',
+      success: (res) => {
+        if (!res.code) {
+          reject(new Error('未获取到微信登录凭证'))
+          return
+        }
+
+        resolve(res.code)
+      },
+      fail: (error) => {
+        reject(error)
+      }
+    })
+  })
+}
+
+async function handleWechatPhoneLogin(event) {
+  // #ifndef MP-WEIXIN
+  return
+  // #endif
+
+  const phoneCode = event?.detail?.code || ''
+
+  if (!phoneCode) {
+    uni.showToast({
+      title: event?.detail?.errMsg?.includes('deny') ? '你已取消微信手机号授权' : '未获取到微信手机号授权',
+      icon: 'none'
+    })
+    return
+  }
+
+  uni.showLoading({ title: '登录中' })
+
+  try {
+    const loginCode = await getWechatLoginCode()
+    const res = await wechatMiniProgramLogin({
+      loginCode,
+      phoneCode
+    })
+
+    userStore.setLogin(res.data)
+    uni.showToast({ title: res.message || '登录成功', icon: 'none' })
+
+    setTimeout(() => {
+      goHome()
+    }, 250)
+  } catch (error) {
+    console.error('wechat login error', error)
   } finally {
     uni.hideLoading()
   }
@@ -197,5 +263,44 @@ onLoad(() => {
 
 .mt-20 {
   margin-top: 20rpx;
+}
+
+.wechat-login-divider {
+  position: relative;
+  margin-top: 28rpx;
+  padding-top: 18rpx;
+  text-align: center;
+}
+
+.wechat-login-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rpx;
+  background: linear-gradient(90deg, rgba(205, 214, 230, 0), rgba(205, 214, 230, 0.95), rgba(205, 214, 230, 0));
+}
+
+.wechat-login-divider__text {
+  display: inline-block;
+  padding: 0 18rpx;
+  font-size: 22rpx;
+  color: #94a3b8;
+  background: #ffffff;
+}
+
+.wechat-btn {
+  color: #ffffff;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 14rpx 28rpx rgba(34, 197, 94, 0.22);
+}
+
+.wechat-login-tip {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: #94a3b8;
 }
 </style>
