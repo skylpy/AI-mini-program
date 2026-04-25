@@ -1,11 +1,16 @@
 <template>
-  <view class="page-nav">
-    <view class="left-area" @click="handleBack">
-      <image class="back-arrow" :src="backIcon" mode="aspectFit" />
-      <text class="back-text">返回</text>
+  <view class="page-nav-wrap">
+    <view :class="['page-nav-shell', { 'page-nav-shell-fixed': fixed }]">
+      <view class="page-nav">
+        <view class="left-area" @click="handleBack">
+          <image class="back-arrow" :src="backIcon" mode="aspectFit" />
+          <text class="back-text">返回</text>
+        </view>
+        <text class="nav-title">{{ title }}</text>
+        <view class="right-placeholder"></view>
+      </view>
     </view>
-    <text class="nav-title">{{ title }}</text>
-    <view class="right-placeholder"></view>
+    <view v-if="fixed" class="page-nav-placeholder"></view>
   </view>
 </template>
 
@@ -17,6 +22,10 @@ const props = defineProps({
   title: {
     type: String,
     default: ''
+  },
+  fixed: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -44,13 +53,33 @@ function handleBack() {
 </script>
 
 <style scoped lang="scss">
-.page-nav {
+.page-nav-wrap {
+  width: 100%;
+}
+
+.page-nav-shell {
   position: relative;
+  margin-bottom: 24rpx;
+}
+
+.page-nav-shell-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1200;
+  padding: calc(var(--status-bar-height) + 10rpx) 24rpx 14rpx;
+  background: linear-gradient(180deg, rgba(237, 244, 255, 0.96) 0%, rgba(244, 247, 252, 0.88) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 10rpx 26rpx rgba(31, 50, 92, 0.06);
+}
+
+.page-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 84rpx;
-  margin-bottom: 24rpx;
 }
 
 .left-area {
@@ -94,4 +123,18 @@ function handleBack() {
 .right-placeholder {
   width: 172rpx;
 }
+
+.page-nav-placeholder {
+  height: calc(var(--status-bar-height) + 108rpx);
+}
+
+/* #ifdef MP-WEIXIN */
+.page-nav-shell-fixed {
+  padding-top: calc(var(--status-bar-height) + 10rpx + 8px);
+}
+
+.page-nav-placeholder {
+  height: calc(var(--status-bar-height) + 108rpx + 8px);
+}
+/* #endif */
 </style>

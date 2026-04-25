@@ -19,13 +19,13 @@ page {
 
 .page-container {
   min-height: 100vh;
-  padding: calc(var(--status-bar-height) + 24rpx) 24rpx 32rpx;
+  padding: 24rpx 24rpx 32rpx;
   background: linear-gradient(180deg, #edf4ff 0, #f4f7fc 240rpx, #f4f7fc 100%);
 }
 
 /* #ifdef MP-WEIXIN */
 .page-container {
-  padding-top: calc(var(--status-bar-height) + 24rpx + 8px);
+  padding-top: 24rpx;
 }
 /* #endif */
 
