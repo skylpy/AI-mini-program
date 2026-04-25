@@ -30,13 +30,14 @@
       <button class="secondary-btn mt-20" @click="goRegister">去注册</button>
 
       <!-- #ifdef MP-WEIXIN -->
-      <view class="wechat-login-divider">
+	  
+      <!-- <view class="wechat-login-divider">
         <text class="wechat-login-divider__text">或</text>
       </view>
       <button class="wechat-btn mt-20" open-type="getPhoneNumber" @getphonenumber="handleWechatPhoneLogin">
         微信手机号快捷登录
       </button>
-      <text class="wechat-login-tip">首次登录会自动创建账号，已注册手机号会自动绑定当前微信</text>
+      <text class="wechat-login-tip">首次登录会自动创建账号，已注册手机号会自动绑定当前微信</text> -->
       <!-- #endif -->
     </view>
   </view>
