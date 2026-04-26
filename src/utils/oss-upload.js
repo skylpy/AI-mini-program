@@ -1,4 +1,4 @@
-import { getOssUploadSettings } from '../api/conversion'
+import { getOssUploadSettings } from '../api/oss'
 import { buildOssSourceKey, joinUrl } from './conversion'
 import { hasValidUploadFilePath, normalizeUploadFile } from './upload-file'
 

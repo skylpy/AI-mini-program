@@ -1,21 +1,8 @@
 import request, { buildApiUrl } from '../utils/request'
 import { useUserStore } from '../stores/user'
+import { buildOssSourceKey } from '../utils/conversion'
+import { uploadDocumentToOss } from '../utils/oss-upload'
 import { hasValidUploadFilePath, normalizeUploadFile } from '../utils/upload-file'
-
-export function getOssUploadSettings(options = {}) {
-  const querySuffix = `t=${Date.now()}`
-
-  return request({
-    url: `/api/conversions/oss-sts?${querySuffix}`,
-    method: 'GET',
-    header: {
-      'Cache-Control': 'no-cache',
-      Pragma: 'no-cache',
-      ...(options.header || {})
-    },
-    ...options
-  })
-}
 
 export function createConversionByUrl(data, options = {}) {
   return request({
@@ -157,52 +144,35 @@ export function createImageToPdf(data = {}, options = {}) {
     return Promise.reject(new Error('图片路径不存在，请重新选择图片'))
   }
 
-  return new Promise((resolve, reject) => {
-    const [firstImage, ...restImages] = normalizedImages.map(({ image }) => image)
-    const uploadImages = restImages.map((image) => ({
-      name: 'images',
-      uri: image.filePath
-    }))
+  return Promise.all(
+    normalizedImages.map(async ({ image }, index) => {
+      const uploadResult = await uploadDocumentToOss(image, {
+        sourceKey: buildOssSourceKey(image.name || `image-${index + 1}.jpg`, 'source/image-to-pdf')
+      })
 
-    uni.uploadFile({
-      url: buildApiUrl('/api/conversions/image-to-pdf'),
-      // 小程序端会校验顶层 filePath/name；后端又要求字段名必须是 images。
-      // 因此首张图走顶层参数，其余图片走 files，统一使用 images 字段。
-      filePath: firstImage.filePath,
-      name: 'images',
-      files: uploadImages,
-      formData: {
-        title
+      return {
+        name: image.name || `image-${index + 1}.jpg`,
+        size: Number(image.size) || 0,
+        mimeType: image.type || image.mimeType || '',
+        url: uploadResult.sourceUrl,
+        key: uploadResult.sourceKey
+      }
+    })
+  ).then((uploadedImages) =>
+    request({
+      url: '/api/conversions/image-to-pdf',
+      method: 'POST',
+      data: {
+        title,
+        imageSources: uploadedImages
       },
       header: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.header || {})
       },
-      success: (response) => {
-        let responseData = {}
-
-        try {
-          responseData = JSON.parse(response.data || '{}')
-        } catch (error) {
-          responseData = {}
-        }
-
-        if (
-          response.statusCode >= 200 &&
-          response.statusCode < 300 &&
-          (typeof responseData?.code === 'undefined' || responseData.code === 0)
-        ) {
-          resolve(responseData)
-          return
-        }
-
-        reject(new Error(responseData?.message || 'PDF 生成失败'))
-      },
-      fail: (error) => {
-        reject(new Error(error?.errMsg || '上传图片失败'))
-      }
+      ...options
     })
-  })
+  )
   // #endif
 
   // #ifdef H5

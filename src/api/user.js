@@ -8,6 +8,15 @@ export function getUserProfile(options = {}) {
   })
 }
 
+export function updateUserProfile(data, options = {}) {
+  return request({
+    url: '/api/user/profile',
+    method: 'PUT',
+    data,
+    ...options
+  })
+}
+
 export function updatePassword(data, options = {}) {
   return request({
     url: '/api/user/password',
